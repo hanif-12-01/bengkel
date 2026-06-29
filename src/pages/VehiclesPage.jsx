@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Car, Info, Plus, Settings2, Trash2, X } from 'lucide-react';
+import { Car, Bike, Info, Plus, Settings2, Trash2, X } from 'lucide-react';
 
 const INITIAL_VEHICLES = [
   {
     id: 1,
+    type: 'Mobil',
     brand: 'Toyota',
     model: 'Avanza',
     year: '2019',
@@ -15,20 +16,45 @@ const INITIAL_VEHICLES = [
   },
   {
     id: 2,
+    type: 'Mobil',
     brand: 'Honda',
     model: 'Brio',
     year: '2021',
     plate: 'B 5678 DEF',
     color: 'Merah',
     lastService: '2023-08-12',
+  },
+  {
+    id: 3,
+    type: 'Motor',
+    brand: 'Honda',
+    model: 'Beat',
+    year: '2020',
+    plate: 'B 9876 XYZ',
+    color: 'Biru',
+    lastService: '2023-09-20',
   }
 ];
 
+const getStoredVehicles = () => {
+  const stored = localStorage.getItem('simobs_vehicles');
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  localStorage.setItem('simobs_vehicles', JSON.stringify(INITIAL_VEHICLES));
+  return INITIAL_VEHICLES;
+};
+
 export default function VehiclesPage() {
-  const [vehicles, setVehicles] = useState(INITIAL_VEHICLES);
+  const [vehicles, setVehicles] = useState(getStoredVehicles);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Form states
+  const [type, setType] = useState('Mobil');
   const [brand, setBrand] = useState('');
   const [model, setModel] = useState('');
   const [year, setYear] = useState('');
@@ -37,6 +63,7 @@ export default function VehiclesPage() {
   const [error, setError] = useState('');
 
   const handleOpenModal = () => {
+    setType('Mobil');
     setBrand('');
     setModel('');
     setYear('');
@@ -60,6 +87,7 @@ export default function VehiclesPage() {
 
     const newVehicle = {
       id: Date.now(),
+      type: type,
       brand: brand.trim(),
       model: model.trim(),
       year: year.trim(),
@@ -68,13 +96,17 @@ export default function VehiclesPage() {
       lastService: 'Belum Servis',
     };
 
-    setVehicles([...vehicles, newVehicle]);
+    const updated = [...vehicles, newVehicle];
+    setVehicles(updated);
+    localStorage.setItem('simobs_vehicles', JSON.stringify(updated));
     setIsModalOpen(false);
   };
 
   const handleDeleteVehicle = (id) => {
     if (window.confirm('Apakah Anda yakin ingin menghapus kendaraan ini dari garasi?')) {
-      setVehicles(vehicles.filter((v) => v.id !== id));
+      const updated = vehicles.filter((v) => v.id !== id);
+      setVehicles(updated);
+      localStorage.setItem('simobs_vehicles', JSON.stringify(updated));
     }
   };
 
@@ -106,10 +138,15 @@ export default function VehiclesPage() {
             <CardContent className="p-6">
               <div className="flex items-start space-x-4 mb-6">
                 <div className="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                  <Car className="w-8 h-8" />
+                  {vehicle.type === 'Motor' ? <Bike className="w-8 h-8" /> : <Car className="w-8 h-8" />}
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">{vehicle.brand} {vehicle.model}</h3>
+                  <div className="flex items-center space-x-2">
+                    <h3 className="text-xl font-bold">{vehicle.brand} {vehicle.model}</h3>
+                    <span className="px-2 py-0.5 text-xs font-semibold bg-primary/10 text-primary rounded-full">
+                      {vehicle.type || 'Mobil'}
+                    </span>
+                  </div>
                   <p className="text-muted-foreground">{vehicle.year} • {vehicle.color}</p>
                 </div>
               </div>
@@ -132,16 +169,6 @@ export default function VehiclesPage() {
             </CardContent>
           </Card>
         ))}
-        
-        <button 
-          onClick={handleOpenModal}
-          className="flex flex-col items-center justify-center min-h-[200px] rounded-xl border-2 border-dashed border-border bg-transparent hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground hover:border-primary/50"
-        >
-          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
-            <Plus className="w-6 h-6" />
-          </div>
-          <span className="font-semibold">Daftarkan Kendaraan Baru</span>
-        </button>
       </div>
 
       {/* Modal / Dialog for registering a new vehicle */}
@@ -168,14 +195,46 @@ export default function VehiclesPage() {
               )}
 
               <div>
+                <label className="text-xs font-bold text-muted uppercase tracking-wider mb-2 block">
+                  Jenis Kendaraan
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setType('Mobil')}
+                    className={`flex items-center justify-center space-x-2 py-3 px-4 rounded-xl border font-bold text-sm transition-all ${
+                      type === 'Mobil'
+                        ? 'border-primary bg-primary/10 text-primary ring-1 ring-primary'
+                        : 'border-border bg-muted hover:bg-muted/70 text-muted-foreground'
+                    }`}
+                  >
+                    <Car className="w-4 h-4" />
+                    <span>Mobil</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setType('Motor')}
+                    className={`flex items-center justify-center space-x-2 py-3 px-4 rounded-xl border font-bold text-sm transition-all ${
+                      type === 'Motor'
+                        ? 'border-primary bg-primary/10 text-primary ring-1 ring-primary'
+                        : 'border-border bg-muted hover:bg-muted/70 text-muted-foreground'
+                    }`}
+                  >
+                    <Bike className="w-4 h-4" />
+                    <span>Motor</span>
+                  </button>
+                </div>
+              </div>
+
+              <div>
                 <label className="text-xs font-bold text-muted uppercase tracking-wider mb-1.5 block">
-                  Merek Mobil
+                  Merek {type}
                 </label>
                 <input 
                   type="text" 
                   value={brand}
                   onChange={(e) => setBrand(e.target.value)}
-                  placeholder="Contoh: Toyota, Honda, Mitsubishi"
+                  placeholder={type === 'Mobil' ? "Contoh: Toyota, Honda, Mitsubishi" : "Contoh: Honda, Yamaha, Suzuki, Kawasaki"}
                   className="w-full px-4 py-3 bg-muted border border-border rounded-xl text-text placeholder-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-sm"
                   required
                 />
@@ -189,7 +248,7 @@ export default function VehiclesPage() {
                   type="text" 
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
-                  placeholder="Contoh: Avanza, Civic, Xpander"
+                  placeholder={type === 'Mobil' ? "Contoh: Avanza, Civic, Xpander" : "Contoh: Beat, Vario, NMAX"}
                   className="w-full px-4 py-3 bg-muted border border-border rounded-xl text-text placeholder-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-sm"
                   required
                 />

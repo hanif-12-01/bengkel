@@ -1,12 +1,19 @@
-    {
-  "name": "simobs-frontend",
+{
+  "name": "simobs-cross-platform",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:web": "vite --host 0.0.0.0",
+    "api": "node server/index.mjs",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "desktop:dev": "npm run build && npx tauri dev",
+    "desktop:build": "npm run build && npx tauri build",
+    "mobile:sync": "npm run build && npx cap sync",
+    "mobile:android": "npm run build && npx cap sync android",
+    "mobile:ios": "npm run build && npx cap sync ios"
   },
   "dependencies": {
     "clsx": "^2.1.1",

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Car, Calendar, Clock, Wrench, ShieldCheck, 
+  Car, Bike, Calendar, Clock, Wrench, ShieldCheck, 
   ArrowRight, Plus, User, Sparkles
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
@@ -17,23 +17,45 @@ const UPCOMING_BOOKING = {
   price: 'Rp 150.000'
 };
 
-const MY_VEHICLES = [
+const INITIAL_VEHICLES = [
   {
     id: 1,
+    type: 'Mobil',
     brand: 'Toyota',
     model: 'Avanza',
     plate: 'B 1234 ABC',
   },
   {
     id: 2,
+    type: 'Mobil',
     brand: 'Honda',
     model: 'Brio',
     plate: 'B 5678 DEF',
+  },
+  {
+    id: 3,
+    type: 'Motor',
+    brand: 'Honda',
+    model: 'Beat',
+    plate: 'B 9876 XYZ',
   }
 ];
 
+const getStoredVehicles = () => {
+  const stored = localStorage.getItem('simobs_vehicles');
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  return INITIAL_VEHICLES;
+};
+
 export default function LandingPage() {
   const navigate = useNavigate();
+  const [vehicles] = useState(getStoredVehicles);
 
   return (
     <div className="space-y-8 pb-12 max-w-7xl mx-auto">
@@ -80,7 +102,7 @@ export default function LandingPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">Kendaraan Terdaftar</p>
-              <h3 className="text-2xl font-bold">{MY_VEHICLES.length} Unit</h3>
+              <h3 className="text-2xl font-bold">{vehicles.length} Unit</h3>
             </div>
           </CardContent>
         </Card>
@@ -183,11 +205,11 @@ export default function LandingPage() {
             </CardHeader>
             <CardContent className="pt-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {MY_VEHICLES.map((vehicle) => (
+                {vehicles.map((vehicle) => (
                   <div key={vehicle.id} className="flex items-center justify-between p-4 bg-muted/20 hover:bg-muted/40 transition-colors border border-border/30 rounded-2xl">
                     <div className="flex items-center space-x-3.5">
                       <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                        <Car className="w-5 h-5" />
+                        {vehicle.type === 'Motor' ? <Bike className="w-5 h-5" /> : <Car className="w-5 h-5" />}
                       </div>
                       <div>
                         <h4 className="font-bold text-sm text-text">{vehicle.brand} {vehicle.model}</h4>

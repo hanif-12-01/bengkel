@@ -1,0 +1,19 @@
+{
+  "name": "SIMOBS - Sistem Booking Servis Bengkel",
+  "short_name": "SIMOBS",
+  "description": "Professional automotive workshop booking platform for customers and admins.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#171814",
+  "theme_color": "#171814",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

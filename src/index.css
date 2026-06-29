@@ -1,116 +1,156 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  /* Default fallback — always defined */
   :root {
-    --background: 40 33% 98%;
+    --background: 38 35% 96%;
     --surface: 0 0% 100%;
-    --primary: 220 60% 45%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 15% 40%;
-    --secondary-foreground: 0 0% 100%;
-    --accent: 45 80% 55%;
-    --accent-foreground: 0 0% 10%;
-    --text: 220 50% 15%;
-    --muted-text: 220 15% 55%;
-    --border: 220 15% 88%;
-    --shadow-color: 220 10% 70%;
+    --surface-soft: 38 28% 92%;
+    --primary: 218 44% 18%;
+    --primary-dark: 220 45% 10%;
+    --primary-foreground: 42 38% 94%;
+    --accent: 39 45% 47%;
+    --accent-foreground: 225 28% 12%;
+    --text: 222 35% 13%;
+    --muted: 220 10% 45%;
+    --border: 35 16% 83%;
+    --success: 148 43% 36%;
+    --warning: 39 68% 47%;
+    --danger: 355 55% 48%;
+    --info: 204 55% 43%;
+    --radius: 8px;
+    --shadow-color: 222 32% 16%;
   }
 
-  /* Morning (5am - 11am): Warm ivory with navy accents */
-  .theme-morning {
-    --background: 40 33% 98%;
+  [data-theme='morning'] {
+    --background: 42 42% 97%;
     --surface: 0 0% 100%;
-    --primary: 220 60% 45%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 15% 40%;
-    --secondary-foreground: 0 0% 100%;
-    --accent: 45 80% 55%;
-    --accent-foreground: 0 0% 10%;
-    --text: 220 50% 15%;
-    --muted-text: 220 15% 55%;
-    --border: 220 15% 88%;
-    --shadow-color: 220 10% 70%;
+    --surface-soft: 42 30% 92%;
+    --primary: 218 45% 18%;
+    --primary-dark: 220 50% 10%;
+    --primary-foreground: 42 40% 96%;
+    --accent: 42 43% 49%;
+    --accent-foreground: 222 34% 12%;
+    --text: 219 38% 15%;
+    --muted: 218 11% 45%;
+    --border: 40 20% 84%;
+    --shadow-color: 222 24% 22%;
   }
 
-  /* Afternoon (11am - 5pm): Warm neutral with dark slate */
-  .theme-afternoon {
-    --background: 30 20% 96%;
-    --surface: 0 0% 100%;
-    --primary: 215 55% 42%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 215 15% 45%;
-    --secondary-foreground: 0 0% 100%;
-    --accent: 30 70% 50%;
-    --accent-foreground: 0 0% 100%;
-    --text: 215 40% 15%;
-    --muted-text: 215 15% 50%;
-    --border: 215 20% 85%;
-    --shadow-color: 215 15% 75%;
+  [data-theme='afternoon'] {
+    --background: 35 24% 94%;
+    --surface: 36 30% 98%;
+    --surface-soft: 35 19% 89%;
+    --primary: 210 18% 18%;
+    --primary-dark: 214 28% 10%;
+    --primary-foreground: 40 38% 95%;
+    --accent: 32 43% 45%;
+    --accent-foreground: 36 35% 96%;
+    --text: 212 17% 16%;
+    --muted: 214 9% 43%;
+    --border: 34 14% 78%;
+    --shadow-color: 212 24% 18%;
   }
 
-  /* Evening (5pm - 9pm): Warm dark with gold accents */
-  .theme-evening {
-    --background: 220 20% 18%;
-    --surface: 220 18% 22%;
-    --primary: 45 70% 55%;
-    --primary-foreground: 220 30% 10%;
-    --secondary: 220 15% 40%;
-    --secondary-foreground: 0 0% 95%;
-    --accent: 45 60% 60%;
-    --accent-foreground: 0 0% 10%;
-    --text: 0 0% 95%;
-    --muted-text: 220 10% 65%;
-    --border: 220 15% 28%;
-    --shadow-color: 220 30% 8%;
+  [data-theme='evening'] {
+    --background: 218 13% 18%;
+    --surface: 218 12% 22%;
+    --surface-soft: 218 12% 26%;
+    --primary: 39 38% 55%;
+    --primary-dark: 218 20% 12%;
+    --primary-foreground: 220 22% 10%;
+    --accent: 42 45% 58%;
+    --accent-foreground: 220 18% 10%;
+    --text: 42 26% 91%;
+    --muted: 38 10% 68%;
+    --border: 216 11% 32%;
+    --shadow-color: 220 30% 5%;
   }
 
-  /* Night (9pm - 5am): Deep charcoal with muted gold */
-  .theme-night {
-    --background: 225 25% 12%;
-    --surface: 225 20% 16%;
-    --primary: 45 50% 50%;
-    --primary-foreground: 225 30% 10%;
-    --secondary: 225 15% 30%;
-    --secondary-foreground: 0 0% 90%;
-    --accent: 45 45% 55%;
-    --accent-foreground: 0 0% 10%;
-    --text: 0 0% 93%;
-    --muted-text: 225 10% 60%;
-    --border: 225 20% 22%;
-    --shadow-color: 0 0% 3%;
+  [data-theme='night'] {
+    --background: 220 24% 10%;
+    --surface: 220 19% 15%;
+    --surface-soft: 220 16% 19%;
+    --primary: 42 39% 57%;
+    --primary-dark: 222 32% 8%;
+    --primary-foreground: 220 25% 9%;
+    --accent: 39 43% 53%;
+    --accent-foreground: 220 26% 9%;
+    --text: 45 28% 92%;
+    --muted: 218 10% 66%;
+    --border: 220 13% 26%;
+    --shadow-color: 0 0% 0%;
   }
 
   * {
     border-color: hsl(var(--border));
   }
 
+  html {
+    min-height: 100%;
+    background: hsl(var(--background));
+    color-scheme: light dark;
+  }
+
   body {
-    background-color: hsl(var(--background));
+    min-height: 100vh;
+    margin: 0;
+    background:
+      linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--surface-soft)) 100%);
     color: hsl(var(--text));
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    transition: background-color 0.5s ease, color 0.5s ease;
-    min-height: 100vh;
+    transition: background-color 350ms ease, color 350ms ease;
+  }
+
+  button, input, select, textarea {
+    font: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 }
 
-/* Custom scrollbar */
+@layer components {
+  .app-card {
+    border: 1px solid hsl(var(--border) / 0.8);
+    border-radius: var(--radius);
+    background: hsl(var(--surface) / 0.92);
+    box-shadow: 0 18px 45px -32px hsl(var(--shadow-color) / 0.5);
+  }
+
+  .shell-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  .safe-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
+
 ::-webkit-scrollbar-track {
-  background: hsl(var(--background));
+  background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--border));
-  border-radius: 3px;
+  border-radius: 8px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-text));
+
+@media (display-mode: standalone) {
+  body {
+    user-select: none;
+  }
 }

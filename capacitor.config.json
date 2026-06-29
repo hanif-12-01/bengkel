@@ -1,0 +1,16 @@
+{
+  "appId": "id.simobs.app",
+  "appName": "SIMOBS",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1200,
+      "backgroundColor": "#171814",
+      "showSpinner": false
+    }
+  }
+}

@@ -5,6 +5,7 @@ dist-ssr/
 *.local
 .env
 .env.*
+!.env.example
 
 # Logs
 logs
@@ -37,3 +38,9 @@ apache-maven-3.9.7/
 *firebase-adminsdk*.json
 secrets/
 credentials/
+
+# Source archives extracted for migration inspection
+temp_extract/
+
+# Local API datastore
+server/data/*.json
