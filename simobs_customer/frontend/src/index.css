@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Default fallback — always defined */
+  :root {
+    --background: 40 33% 98%;
+    --surface: 0 0% 100%;
+    --primary: 220 60% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 40%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 45 80% 55%;
+    --accent-foreground: 0 0% 10%;
+    --text: 220 50% 15%;
+    --muted-text: 220 15% 55%;
+    --border: 220 15% 88%;
+    --shadow-color: 220 10% 70%;
+  }
+
+  /* Morning (5am - 11am): Warm ivory with navy accents */
+  .theme-morning {
+    --background: 40 33% 98%;
+    --surface: 0 0% 100%;
+    --primary: 220 60% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 40%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 45 80% 55%;
+    --accent-foreground: 0 0% 10%;
+    --text: 220 50% 15%;
+    --muted-text: 220 15% 55%;
+    --border: 220 15% 88%;
+    --shadow-color: 220 10% 70%;
+  }
+
+  /* Afternoon (11am - 5pm): Warm neutral with dark slate */
+  .theme-afternoon {
+    --background: 30 20% 96%;
+    --surface: 0 0% 100%;
+    --primary: 215 55% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 15% 45%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 30 70% 50%;
+    --accent-foreground: 0 0% 100%;
+    --text: 215 40% 15%;
+    --muted-text: 215 15% 50%;
+    --border: 215 20% 85%;
+    --shadow-color: 215 15% 75%;
+  }
+
+  /* Evening (5pm - 9pm): Warm dark with gold accents */
+  .theme-evening {
+    --background: 220 20% 18%;
+    --surface: 220 18% 22%;
+    --primary: 45 70% 55%;
+    --primary-foreground: 220 30% 10%;
+    --secondary: 220 15% 40%;
+    --secondary-foreground: 0 0% 95%;
+    --accent: 45 60% 60%;
+    --accent-foreground: 0 0% 10%;
+    --text: 0 0% 95%;
+    --muted-text: 220 10% 65%;
+    --border: 220 15% 28%;
+    --shadow-color: 220 30% 8%;
+  }
+
+  /* Night (9pm - 5am): Deep charcoal with muted gold */
+  .theme-night {
+    --background: 225 25% 12%;
+    --surface: 225 20% 16%;
+    --primary: 45 50% 50%;
+    --primary-foreground: 225 30% 10%;
+    --secondary: 225 15% 30%;
+    --secondary-foreground: 0 0% 90%;
+    --accent: 45 45% 55%;
+    --accent-foreground: 0 0% 10%;
+    --text: 0 0% 93%;
+    --muted-text: 225 10% 60%;
+    --border: 225 20% 22%;
+    --shadow-color: 0 0% 3%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--text));
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.5s ease, color 0.5s ease;
+    min-height: 100vh;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-text));
+}

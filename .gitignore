@@ -1,0 +1,39 @@
+# Node.js
+node_modules/
+dist/
+dist-ssr/
+*.local
+.env
+.env.*
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# IDE/Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+apache-maven-3.9.7/
+
+# Firebase / Service Account Keys
+*firebase-adminsdk*.json
+secrets/
+credentials/
