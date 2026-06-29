@@ -1,6 +1,6 @@
 # Panduan Deploy Frontend ke Vercel
 
-Repositori ini telah disiapkan untuk deploy ke Vercel. Berikut adalah langkah-langkah untuk melakukan deployment:
+Repositori ini telah disederhanakan dengan memindahkan seluruh kode frontend ke root direktori dan menghapus backend agar dapat dideploy secara instan di Vercel.
 
 ## Langkah 1: Hubungkan GitHub ke Vercel
 1. Masuk ke dashboard [Vercel](https://vercel.com).
@@ -8,27 +8,14 @@ Repositori ini telah disiapkan untuk deploy ke Vercel. Berikut adalah langkah-la
 3. Pilih repositori `bengkel` dari akun GitHub Anda (`hanif-12-01/bengkel`) dan klik **Import**.
 
 ## Langkah 2: Konfigurasi Project di Vercel
-Pada halaman konfigurasi sebelum deploy:
-1. **Root Directory**: Ubah ke `simobs_customer/frontend` (klik *Edit* di samping Root Directory, lalu pilih folder `simobs_customer/frontend`).
+Karena semua file frontend sudah berada di root direktori:
+1. **Root Directory**: Biarkan default (tidak perlu diubah).
 2. **Framework Preset**: Vercel akan otomatis mendeteksi **Vite**.
 3. **Build and Output Settings**:
    - Build Command: `npm run build`
    - Output Directory: `dist`
    - Install Command: `npm install`
-4. **Environment Variables**:
-   - Jika aplikasi memerlukan variabel penunjuk URL backend, tambahkan variable environment yang sesuai.
-5. Klik tombol **Deploy**.
+4. Klik tombol **Deploy**.
 
 ## Penanganan Client-Side Routing
-File `vercel.json` telah dibuat di dalam folder `simobs_customer/frontend` dengan isi:
-```json
-{
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
-}
-```
-Ini memastikan routing client-side React Router (seperti `/login`, `/dashboard`, dll.) bekerja dengan lancar tanpa error 404 ketika diakses secara langsung di browser atau saat halaman direfresh.
+File `vercel.json` berada di root direktori dengan konfigurasi rewrite rule agar routing client-side React Router (seperti `/login`, `/dashboard`, dll.) tidak mengalami error 404 ketika diakses secara langsung atau ketika di-refresh.
