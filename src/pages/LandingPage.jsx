@@ -1,144 +1,282 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, Clock, PenToolIcon as Tool, Wrench, BatteryCharging, Disc, Droplets, ChevronRight, Star } from 'lucide-react';
+import { 
+  Car, Calendar, Clock, Wrench, ShieldCheck, 
+  ArrowRight, Plus, User, Sparkles
+} from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/Card';
 
-const SERVICES = [
-  { icon: Droplets, title: 'Oil Change', price: 'Mulai Rp 150.000', desc: 'Ganti oli mesin & filter dengan oli premium berkualitas.' },
-  { icon: Disc, title: 'Tire & Brake', price: 'Mulai Rp 100.000', desc: 'Cek kondisi ban, spooring, balancing, dan kampas rem.' },
-  { icon: Wrench, title: 'Engine Tune-up', price: 'Mulai Rp 350.000', desc: 'Performa mesin kembali maksimal seperti mobil baru.' },
-  { icon: BatteryCharging, title: 'Electrical Check', price: 'Mulai Rp 200.000', desc: 'Pengecekan aki, alternator, dan kelistrikan mobil.' },
-];
+const UPCOMING_BOOKING = {
+  id: 'BK-1002',
+  date: '2023-11-20',
+  time: '14:00',
+  vehicle: 'Toyota Avanza (B 1234 ABC)',
+  service: 'Ganti Oli & Filter',
+  status: 'upcoming',
+  price: 'Rp 150.000'
+};
 
-const REVIEWS = [
-  { name: 'Budi Santoso', rating: 5, text: 'Pelayanan sangat profesional dan transparan. Mobil saya kembali enak dipakai.' },
-  { name: 'Siti Aminah', rating: 5, text: 'Booking lewat aplikasi sangat mudah. Tidak perlu antre lama di bengkel.' },
-  { name: 'Andi Wijaya', rating: 4, text: 'Mekanik andal dan ramah. Harga juga sesuai dengan estimasi awal.' },
+const MY_VEHICLES = [
+  {
+    id: 1,
+    brand: 'Toyota',
+    model: 'Avanza',
+    plate: 'B 1234 ABC',
+  },
+  {
+    id: 2,
+    brand: 'Honda',
+    model: 'Brio',
+    plate: 'B 5678 DEF',
+  }
 ];
 
 export default function LandingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col space-y-16 pb-16 max-w-7xl mx-auto">
-      {/* Hero Section */}
-      <section className="relative rounded-[2.5rem] overflow-hidden bg-primary p-10 md:p-16 lg:p-24 flex flex-col items-center text-center shadow-premium transition-all">
-        {/* Abstract shapes for premium feel */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3"></div>
-        
-        <div className="relative z-10 max-w-3xl space-y-8">
-          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 text-primary-foreground/90 text-sm font-medium mb-4">
-            <span className="flex h-2 w-2 rounded-full bg-green-400"></span>
-            <span>Bengkel Buka - Siap Menerima Booking</span>
+    <div className="space-y-8 pb-12 max-w-7xl mx-auto">
+      {/* Welcome Banner */}
+      <section className="relative rounded-3xl overflow-hidden bg-primary p-8 md:p-12 flex flex-col md:flex-row justify-between items-center shadow-lg text-primary-foreground">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+        <div className="relative z-10 space-y-4 max-w-xl text-center md:text-left">
+          <div className="inline-flex items-center space-x-2 bg-white/10 px-3 py-1 rounded-full text-xs font-semibold">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Member Premium</span>
           </div>
-          
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] text-primary-foreground">
-            Premium Auto Service, <br className="hidden md:block"/> Tanpa Antre.
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+            Selamat Datang Kembali, John Doe!
           </h1>
-          <p className="text-lg md:text-xl text-primary-foreground/80 font-medium max-w-2xl mx-auto leading-relaxed">
-            Pesan layanan bengkel profesional dengan mudah. Transparan, cepat, dan dikerjakan oleh teknisi bersertifikat.
+          <p className="text-primary-foreground/80 text-sm md:text-base">
+            Pantau kondisi kendaraan, riwayat pemesanan, dan booking jadwal servis Anda berikutnya dengan lebih cepat.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 pt-6">
-            <Button size="lg" className="w-full sm:w-auto bg-white text-primary hover:bg-gray-50 shadow-xl" onClick={() => navigate('/booking')}>
-              Booking Sekarang <ChevronRight className="ml-2 w-5 h-5" />
-            </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/30 text-primary-foreground hover:bg-white/10 hover:text-white backdrop-blur-sm">
-              Lihat Layanan
-            </Button>
-          </div>
         </div>
-      </section>
-
-      {/* Benefits */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {[
-          { icon: ShieldCheck, title: 'Garansi Servis', desc: 'Semua layanan kami dilindungi oleh garansi resmi selama 30 hari.' },
-          { icon: Clock, title: 'Tepat Waktu', desc: 'Sistem booking memastikan mobil Anda dikerjakan tepat pada waktunya.' },
-          { icon: Tool, title: 'Mekanik Ahli', desc: 'Dikerjakan oleh teknisi bersertifikat dengan peralatan modern.' }
-        ].map((benefit, i) => (
-          <div key={i} className="flex items-start space-x-5 p-8 bg-surface rounded-3xl border border-border/60 shadow-sm hover:shadow-premium transition-all duration-300 hover:-translate-y-1">
-            <div className="p-4 bg-primary/10 text-primary rounded-2xl">
-              <benefit.icon className="w-7 h-7" />
-            </div>
-            <div>
-              <h3 className="font-bold text-xl mb-2 text-text">{benefit.title}</h3>
-              <p className="text-muted leading-relaxed">{benefit.desc}</p>
-            </div>
-          </div>
-        ))}
-      </section>
-
-      {/* Services */}
-      <section className="space-y-10">
-        <div className="flex items-end justify-between">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight text-text">Layanan Unggulan</h2>
-            <p className="text-muted text-lg">Pilih layanan yang sesuai dengan kebutuhan kendaraan Anda.</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {SERVICES.map((service, idx) => (
-            <Card key={idx} className="group cursor-pointer hover:border-primary/50" onClick={() => navigate('/booking')}>
-              <CardHeader className="pb-4">
-                <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center text-text mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-lg">
-                  <service.icon className="w-7 h-7" />
-                </div>
-                <CardTitle className="text-xl mb-1">{service.title}</CardTitle>
-                <CardDescription className="text-accent font-semibold text-base">{service.price}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted leading-relaxed">{service.desc}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="space-y-10 bg-surface border border-border/50 p-8 md:p-16 rounded-[2.5rem] shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl"></div>
-        <div className="text-center max-w-2xl mx-auto space-y-4 relative z-10">
-          <h2 className="text-3xl font-bold tracking-tight text-text">Dipercaya oleh Pelanggan</h2>
-          <p className="text-muted text-lg">Ratusan kendaraan telah kami tangani dengan standar kepuasan tinggi.</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
-          {REVIEWS.map((review, idx) => (
-            <div key={idx} className="bg-background rounded-3xl p-8 border border-border/40 shadow-sm hover:shadow-premium transition-all">
-              <div className="flex items-center space-x-1 mb-6 text-accent">
-                {[...Array(review.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-current" />
-                ))}
-              </div>
-              <p className="text-base leading-relaxed italic text-text mb-8">"{review.text}"</p>
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-lg shadow-sm">
-                  {review.name.charAt(0)}
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-bold text-text">{review.name}</span>
-                  <span className="text-xs text-muted font-medium">Verified Customer</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="bg-gradient-to-br from-surface to-background border border-border rounded-[2.5rem] p-10 md:p-20 text-center space-y-8 shadow-premium relative overflow-hidden">
-        <div className="absolute inset-0 bg-primary/5"></div>
-        <div className="relative z-10 max-w-3xl mx-auto space-y-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-text tracking-tight leading-tight">Siap Mengembalikan Performa Kendaraan Anda?</h2>
-          <p className="text-muted text-xl leading-relaxed">
-            Jangan tunggu sampai mobil Anda bermasalah. Lakukan perawatan rutin sekarang juga melalui aplikasi SIMOBS.
-          </p>
-          <Button size="lg" onClick={() => navigate('/booking')} className="shadow-lg px-8 h-14 text-lg">
-            Mulai Booking Servis <ChevronRight className="ml-2 w-6 h-6" />
+        <div className="relative z-10 flex flex-col sm:flex-row gap-3 mt-6 md:mt-0 w-full md:w-auto">
+          <Button 
+            className="w-full sm:w-auto bg-white text-primary hover:bg-gray-100 font-bold px-6 py-5 rounded-xl shadow-md flex items-center justify-center space-x-2 animate-none"
+            onClick={() => navigate('/dashboard/booking')}
+          >
+            <Plus className="w-5 h-5" />
+            <span>Booking Servis</span>
+          </Button>
+          <Button 
+            variant="outline"
+            className="w-full sm:w-auto border-white/30 text-primary-foreground hover:bg-white/10 hover:text-white font-bold px-6 py-5 rounded-xl flex items-center justify-center space-x-2"
+            onClick={() => navigate('/dashboard/vehicles')}
+          >
+            <Car className="w-5 h-5" />
+            <span>Tambah Kendaraan</span>
           </Button>
         </div>
       </section>
+
+      {/* Stats Summary Cards */}
+      <section className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <Card className="hover:shadow-md transition-shadow">
+          <CardContent className="p-6 flex items-center space-x-4">
+            <div className="p-4 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl">
+              <Car className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Kendaraan Terdaftar</p>
+              <h3 className="text-2xl font-bold">{MY_VEHICLES.length} Unit</h3>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="hover:shadow-md transition-shadow">
+          <CardContent className="p-6 flex items-center space-x-4">
+            <div className="p-4 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-2xl">
+              <Clock className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Booking Aktif</p>
+              <h3 className="text-2xl font-bold">1 Jadwal</h3>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="hover:shadow-md transition-shadow">
+          <CardContent className="p-6 flex items-center space-x-4">
+            <div className="p-4 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-2xl">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Garansi Aktif</p>
+              <h3 className="text-2xl font-bold">30 Hari</h3>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Side: Upcoming Bookings & My Vehicles */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Upcoming Booking Card */}
+          <Card className="shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-border/40">
+              <div>
+                <CardTitle className="text-lg font-bold">Jadwal Servis Terdekat</CardTitle>
+                <CardDescription>Pemesanan servis yang sedang menunggu jadwal pengerjaan.</CardDescription>
+              </div>
+              <span className="text-xs bg-amber-100 text-amber-800 font-semibold px-2.5 py-1 rounded-full">
+                Menunggu
+              </span>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-muted/30 rounded-2xl border border-border/30">
+                <div className="flex items-start space-x-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                    <Wrench className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-base">{UPCOMING_BOOKING.service}</h4>
+                    <p className="text-sm text-muted-foreground font-medium">{UPCOMING_BOOKING.vehicle}</p>
+                    <div className="flex items-center space-x-4 text-xs text-muted-foreground mt-2">
+                      <span className="flex items-center space-x-1">
+                        <Calendar className="w-3.5 h-3.5" /> 
+                        <span>{UPCOMING_BOOKING.date}</span>
+                      </span>
+                      <span className="flex items-center space-x-1">
+                        <Clock className="w-3.5 h-3.5" /> 
+                        <span>{UPCOMING_BOOKING.time} WIB</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 sm:mt-0 flex flex-col items-end">
+                  <span className="text-xs text-muted-foreground">Estimasi Biaya</span>
+                  <span className="text-base font-bold text-primary">{UPCOMING_BOOKING.price}</span>
+                </div>
+              </div>
+              <div className="flex justify-end pt-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-xs font-semibold flex items-center space-x-1"
+                  onClick={() => navigate('/dashboard/history')}
+                >
+                  <span>Lihat Semua Riwayat</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Registered Vehicles */}
+          <Card className="shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-border/40">
+              <div>
+                <CardTitle className="text-lg font-bold">Garasi Saya</CardTitle>
+                <CardDescription>Daftar kendaraan Anda yang terdaftar di SIMOBS.</CardDescription>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="text-xs font-semibold flex items-center space-x-1"
+                onClick={() => navigate('/dashboard/vehicles')}
+              >
+                <span>Kelola Garasi</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {MY_VEHICLES.map((vehicle) => (
+                  <div key={vehicle.id} className="flex items-center justify-between p-4 bg-muted/20 hover:bg-muted/40 transition-colors border border-border/30 rounded-2xl">
+                    <div className="flex items-center space-x-3.5">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                        <Car className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm text-text">{vehicle.brand} {vehicle.model}</h4>
+                        <span className="text-xs font-semibold px-2 py-0.5 bg-background border border-border rounded mt-1 inline-block">
+                          {vehicle.plate}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Side: Quick Action Menu & Info */}
+        <div className="space-y-8">
+          <Card className="shadow-sm">
+            <CardHeader className="pb-2 border-b border-border/40">
+              <CardTitle className="text-lg font-bold">Menu Cepat</CardTitle>
+              <CardDescription>Akses menu SIMOBS dalam satu klik.</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-3">
+              <button 
+                onClick={() => navigate('/dashboard/booking')}
+                className="flex items-center justify-between w-full p-3.5 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors text-left font-medium border border-border/20"
+              >
+                <div className="flex items-center space-x-3">
+                  <Calendar className="w-5 h-5 text-primary" />
+                  <span className="text-sm">Booking Servis Baru</span>
+                </div>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button 
+                onClick={() => navigate('/dashboard/vehicles')}
+                className="flex items-center justify-between w-full p-3.5 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors text-left font-medium border border-border/20"
+              >
+                <div className="flex items-center space-x-3">
+                  <Car className="w-5 h-5 text-primary" />
+                  <span className="text-sm">Daftarkan Kendaraan</span>
+                </div>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button 
+                onClick={() => navigate('/dashboard/history')}
+                className="flex items-center justify-between w-full p-3.5 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors text-left font-medium border border-border/20"
+              >
+                <div className="flex items-center space-x-3">
+                  <Wrench className="w-5 h-5 text-primary" />
+                  <span className="text-sm">Riwayat & Invoice</span>
+                </div>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button 
+                onClick={() => navigate('/dashboard/profile')}
+                className="flex items-center justify-between w-full p-3.5 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors text-left font-medium border border-border/20"
+              >
+                <div className="flex items-center space-x-3">
+                  <User className="w-5 h-5 text-primary" />
+                  <span className="text-sm">Pengaturan Profil</span>
+                </div>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </CardContent>
+          </Card>
+
+          {/* Quick Notice Card */}
+          <Card className="bg-gradient-to-br from-surface to-background border border-border shadow-sm p-6 space-y-4">
+            <h4 className="font-bold text-sm text-text flex items-center space-x-2">
+              <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
+              <span>Layanan Pelanggan</span>
+            </h4>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Butuh bantuan darurat di jalan? Atau ada pertanyaan seputar layanan kami? Hubungi tim support SIMOBS yang siap melayani Anda.
+            </p>
+            <div className="pt-2">
+              <a 
+                href="tel:+628123456789" 
+                className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-primary text-primary-foreground text-xs font-bold rounded-lg hover:opacity-90 transition-opacity"
+              >
+                Hubungi Support
+              </a>
+            </div>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
