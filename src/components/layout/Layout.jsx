@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, NavLink, useLocation } from 'react-router-dom';
+import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Home, CalendarPlus, Clock, User, Settings, Bell, Car } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -9,7 +9,6 @@ const NAV_ITEMS = [
   { name: 'Booking', path: '/dashboard/booking', icon: CalendarPlus },
   { name: 'History', path: '/dashboard/history', icon: Clock },
   { name: 'Vehicles', path: '/dashboard/vehicles', icon: Car },
-  { name: 'Profile', path: '/dashboard/profile', icon: User },
 ];
 
 function SidebarLink({ item }) {
@@ -35,6 +34,7 @@ function SidebarLink({ item }) {
 
 export default function Layout() {
   const { theme } = useTheme();
+  const navigate = useNavigate();
 
   return (
     <div className="flex h-screen bg-background">
@@ -66,10 +66,18 @@ export default function Layout() {
         {/* Mobile Header */}
         <header className="md:hidden flex items-center justify-between p-5 border-b border-border/50 bg-surface/80 backdrop-blur-md sticky top-0 z-30">
           <span className="text-xl font-bold text-primary tracking-tight">SIMOBS</span>
-          <button className="p-2 rounded-full hover:bg-primary/10 text-text transition-colors relative">
-            <Bell className="w-6 h-6" />
-            <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-surface"></span>
-          </button>
+          <div className="flex items-center space-x-3">
+            <button className="p-2 rounded-full hover:bg-primary/10 text-text transition-colors relative">
+              <Bell className="w-6 h-6" />
+              <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-surface"></span>
+            </button>
+            <button 
+              onClick={() => navigate('/dashboard/profile')}
+              className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-md hover:opacity-80 transition-opacity text-sm focus:outline-none"
+            >
+              JD
+            </button>
+          </div>
         </header>
 
         {/* Desktop Header */}
@@ -79,15 +87,18 @@ export default function Layout() {
               <Bell className="w-6 h-6" />
               <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-background"></span>
             </button>
-            <div className="flex items-center space-x-4 pl-6 border-l border-border/50">
+            <button 
+              onClick={() => navigate('/dashboard/profile')}
+              className="flex items-center space-x-4 pl-6 border-l border-border/50 hover:opacity-80 transition-opacity text-left focus:outline-none"
+            >
               <div className="w-11 h-11 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-lg">
                 JD
               </div>
               <div className="flex flex-col">
                 <span className="text-sm font-bold text-text">John Doe</span>
-                <span className="text-xs text-muted font-medium">Premium Member</span>
+                <span className="text-xs text-muted font-medium text-left">Premium Member</span>
               </div>
-            </div>
+            </button>
           </div>
         </header>
 
