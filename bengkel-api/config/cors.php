@@ -1,15 +1,11 @@
 <?php
 
-$allowedOrigins = [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-];
-
+// Ambil origin pengirim dari header HTTP_ORIGIN
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-if (in_array($origin, $allowedOrigins, true)) {
+// Izinkan origin secara dinamis untuk mendukung Vercel, Netlify, maupun Localhost.
+// Ini memudahkan pemanggilan API dari domain frontend manapun tanpa masalah CORS.
+if ($origin) {
     header("Access-Control-Allow-Origin: {$origin}");
 } else {
     header('Access-Control-Allow-Origin: *');
