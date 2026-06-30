@@ -8,12 +8,20 @@ class ServiceController
 
     public function index(): void
     {
-        $vehicleType = $_GET['vehicle_type'] ?? null;
+        // Ambil query param dan sanitasi
+        $rawVehicleType = $_GET['vehicle_type'] ?? null;
+        $vehicleType = null;
 
-        if ($vehicleType !== null && !validateVehicleType((string) $vehicleType)) {
-            errorResponse('Jenis kendaraan tidak valid', [
-                'vehicle_type' => 'Gunakan mobil atau motor.',
-            ], 422);
+        if ($rawVehicleType !== null) {
+            $cleanVehicleType = normalizeString((string)$rawVehicleType, 20);
+            
+            if (!validateVehicleType($cleanVehicleType)) {
+                errorResponse('Jenis kendaraan tidak valid', [
+                    'vehicle_type' => 'Gunakan mobil atau motor.',
+                ], 422);
+            }
+            
+            $vehicleType = normalizeVehicleType($cleanVehicleType);
         }
 
         successResponse('Berhasil mengambil data layanan', $this->serviceModel->getAll($vehicleType));

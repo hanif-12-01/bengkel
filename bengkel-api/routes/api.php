@@ -10,7 +10,7 @@ $bookingModel = new Booking($db);
 $authController = new AuthController($db);
 $serviceController = new ServiceController($serviceModel);
 $workshopController = new WorkshopController($workshopModel);
-$vehicleController = new VehicleController($vehicleModel);
+$vehicleController = new VehicleController($db, $vehicleModel);
 $bookingController = new BookingController($db, $bookingModel, $vehicleModel, $workshopModel, $serviceModel);
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';

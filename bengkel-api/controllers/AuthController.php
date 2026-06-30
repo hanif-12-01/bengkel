@@ -25,15 +25,25 @@ class AuthController
             errorResponse('Data tidak lengkap', $errors, 422);
         }
 
-        if (!validateEmail($data['email'])) {
+        // Sanitasi string dan XSS Prevention
+        $name = normalizeString($data['name'], 100);
+        $email = normalizeString($data['email'], 100);
+        $phone = normalizeString($data['phone'], 20);
+        $password = (string)$data['password'];
+
+        if (!validateEmail($email)) {
             $errors['email'] = 'Format email tidak valid.';
         }
 
-        if (strlen((string) $data['password']) < 6) {
-            $errors['password'] = 'Password minimal 6 karakter.';
+        if (!validatePhoneIndonesia($phone)) {
+            $errors['phone'] = 'Format nomor telepon tidak valid. Gunakan format Indonesia seperti 0812xxxxxxxx atau +628xxxxxxxx.';
         }
 
-        if ($this->userModel->emailExists(trim((string) $data['email']))) {
+        if (!validatePassword($password)) {
+            $errors['password'] = 'Password minimal 8 karakter dan harus mengandung kombinasi huruf dan angka.';
+        }
+
+        if (empty($errors) && $this->userModel->emailExists($email)) {
             $errors['email'] = 'Email sudah terdaftar.';
         }
 
@@ -45,14 +55,14 @@ class AuthController
             $this->db->beginTransaction();
 
             $user = $this->userModel->create([
-                'name' => trim((string) $data['name']),
-                'email' => trim((string) $data['email']),
-                'phone' => trim((string) $data['phone']),
-                'password' => (string) $data['password'],
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'password' => $password,
                 'role' => 'customer',
             ]);
 
-            $token = $this->userModel->createToken((int) $user['id']);
+            $token = $this->userModel->createToken((int)$user['id']);
 
             $this->db->commit();
 
@@ -64,8 +74,8 @@ class AuthController
             if ($this->db->inTransaction()) {
                 $this->db->rollBack();
             }
-
-            errorResponse('Gagal mendaftarkan pengguna: ' . $e->getMessage(), [], 500);
+            error_log("Error during registration: " . $e->getMessage());
+            errorResponse('Gagal mendaftarkan pengguna.', [], 500);
         }
     }
 
@@ -78,29 +88,34 @@ class AuthController
             errorResponse('Data tidak lengkap', $errors, 422);
         }
 
-        if (!validateEmail($data['email'])) {
+        $email = normalizeString($data['email'], 100);
+        $password = (string)$data['password'];
+
+        if (!validateEmail($email)) {
             errorResponse('Format email tidak valid', [
                 'email' => 'Format email tidak valid.',
             ], 422);
         }
 
-        $user = $this->userModel->findByEmail(trim((string) $data['email']));
+        $user = $this->userModel->findByEmail($email);
 
-        if (!$user || !password_verify((string) $data['password'], $user['password_hash'])) {
+        if (!$user || !password_verify($password, $user['password_hash'])) {
+            // Defensive Programming: Pesan kesalahan umum yang aman untuk mencegah enumerasi akun
             errorResponse('Email atau password salah', [
                 'auth' => 'Kredensial tidak valid.',
             ], 401);
         }
 
         try {
-            $token = $this->userModel->createToken((int) $user['id']);
+            $token = $this->userModel->createToken((int)$user['id']);
 
             successResponse('Login berhasil', [
                 'user' => $this->userModel->publicData($user),
                 'token' => $token,
             ]);
         } catch (Exception $e) {
-            errorResponse('Gagal login: ' . $e->getMessage(), [], 500);
+            error_log("Error during login: " . $e->getMessage());
+            errorResponse('Gagal login.', [], 500);
         }
     }
 
@@ -118,7 +133,11 @@ class AuthController
         $token = getBearerToken();
 
         if ($token) {
-            $this->userModel->deleteToken($token);
+            // Defensive: sanitize token string
+            $safeToken = preg_replace('/[^a-zA-Z0-9]/', '', $token);
+            if ($safeToken) {
+                $this->userModel->deleteToken($safeToken);
+            }
         }
 
         successResponse('Logout berhasil');

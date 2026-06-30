@@ -3,6 +3,11 @@ import { Card, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Car, Bike, Info, Plus, Trash2, X, Pencil } from 'lucide-react';
 import { getBookings, getVehicles, saveVehicles } from '../lib/storage';
+import { 
+  validatePlateNumber, 
+  validateVehicleYear, 
+  validateBrandOrModel 
+} from '../lib/validation';
 
 const emptyForm = {
   id: null,
@@ -40,12 +45,23 @@ export default function VehiclesPage() {
   };
 
   const validateVehicle = () => {
-    const normalizedPlate = form.plate.toUpperCase().trim();
-    if (!form.brand.trim() || !form.model.trim() || !form.year.toString().trim() || !normalizedPlate || !form.color.trim()) {
-      return 'Semua kolom data kendaraan wajib diisi.';
-    }
+    const brandErr = validateBrandOrModel(form.brand, 'Merek');
+    if (brandErr) return brandErr;
 
-    const duplicate = vehicles.some((vehicle) => vehicle.plate.toUpperCase() === normalizedPlate && vehicle.id !== editingVehicle?.id);
+    const modelErr = validateBrandOrModel(form.model, 'Tipe/Model');
+    if (modelErr) return modelErr;
+
+    const yearErr = validateVehicleYear(form.year);
+    if (yearErr) return yearErr;
+
+    const colorErr = validateBrandOrModel(form.color, 'Warna');
+    if (colorErr) return colorErr;
+
+    const plateErr = validatePlateNumber(form.plate);
+    if (plateErr) return plateErr;
+
+    const normalizedPlate = form.plate.toUpperCase().trim();
+    const duplicate = vehicles.some((vehicle) => vehicle.plate.toUpperCase().replace(/\s+/g, '') === normalizedPlate.replace(/\s+/g, '') && vehicle.id !== editingVehicle?.id);
     if (duplicate) {
       return 'Nomor polisi sudah terdaftar.';
     }

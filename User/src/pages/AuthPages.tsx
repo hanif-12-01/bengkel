@@ -2,10 +2,12 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "sonner";
+import { validateEmail, validateName, validatePhoneIndonesia } from "../lib/validation";
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [fieldError, setFieldError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -16,12 +18,16 @@ export const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) {
-      toast.error("Email wajib diisi");
+    setFieldError(null);
+    setError(null);
+
+    const emailErr = validateEmail(email);
+    if (emailErr) {
+      setFieldError(emailErr);
+      toast.error(emailErr);
       return;
     }
 
-    setError(null);
     setSubmitting(true);
 
     try {
@@ -77,6 +83,9 @@ export const LoginPage: React.FC = () => {
                 className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:bg-gray-700"
                 placeholder="Masukkan email Anda (contoh: budi@gmail.com)"
               />
+              {fieldError && (
+                <p className="mt-1 text-xs text-red-600 dark:text-red-400">{fieldError}</p>
+              )}
             </div>
           </div>
 
@@ -145,13 +154,26 @@ export const RegisterPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !phone) {
-      toast.error("Semua kolom pendaftaran wajib diisi");
+    setError(null);
+    setFieldErrors({});
+
+    // Validasi client-side (Defensive Programming)
+    const nameErr = validateName(name);
+    const emailErr = validateEmail(email);
+    const phoneErr = validatePhoneIndonesia(phone);
+
+    if (nameErr || emailErr || phoneErr) {
+      const newErrors: Record<string, string> = {};
+      if (nameErr) newErrors.name = nameErr;
+      if (emailErr) newErrors.email = emailErr;
+      if (phoneErr) newErrors.phone = phoneErr;
+      
+      setFieldErrors(newErrors);
+      const firstErr = nameErr || emailErr || phoneErr;
+      toast.error(firstErr);
       return;
     }
 
-    setError(null);
-    setFieldErrors({});
     setSubmitting(true);
 
     try {

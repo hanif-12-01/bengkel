@@ -12,6 +12,13 @@ import {
   getVehicles,
   saveVehicles,
 } from '../lib/storage';
+import {
+  validatePlateNumber,
+  validateVehicleYear,
+  validateBrandOrModel,
+  validateOperationalTime,
+  validateDateNotPast,
+} from '../lib/validation';
 
 const SERVICES = [
   { id: 's1', name: 'Ganti Oli & Filter', price: 'Rp 150.000', icon: Wrench },
@@ -72,14 +79,40 @@ export default function BookingPage() {
 
   const handleAddVehicle = (e) => {
     e.preventDefault();
-    const normalizedPlate = plate.toUpperCase().trim();
+    setError('');
 
-    if (!brand.trim() || !model.trim() || !year.trim() || !normalizedPlate || !color.trim()) {
-      setError('Semua kolom data kendaraan wajib diisi.');
+    const brandErr = validateBrandOrModel(brand, 'Merek');
+    if (brandErr) {
+      setError(brandErr);
       return;
     }
 
-    if (vehicles.some((vehicle) => vehicle.plate.toUpperCase() === normalizedPlate)) {
+    const modelErr = validateBrandOrModel(model, 'Tipe/Model');
+    if (modelErr) {
+      setError(modelErr);
+      return;
+    }
+
+    const yearErr = validateVehicleYear(year);
+    if (yearErr) {
+      setError(yearErr);
+      return;
+    }
+
+    const colorErr = validateBrandOrModel(color, 'Warna');
+    if (colorErr) {
+      setError(colorErr);
+      return;
+    }
+
+    const plateErr = validatePlateNumber(plate);
+    if (plateErr) {
+      setError(plateErr);
+      return;
+    }
+
+    const normalizedPlate = plate.toUpperCase().trim();
+    if (vehicles.some((vehicle) => vehicle.plate.toUpperCase().replace(/\s+/g, '') === normalizedPlate.replace(/\s+/g, ''))) {
       setError('Nomor polisi sudah terdaftar.');
       return;
     }
@@ -102,7 +135,24 @@ export default function BookingPage() {
     setIsModalOpen(false);
   };
 
-  const nextStep = () => setStep((s) => Math.min(s + 1, 4));
+  const nextStep = () => {
+    if (step === 1 && isStep1Valid) {
+      setStep(2);
+    }
+    if (step === 2) {
+      const dateErr = validateDateNotPast(formData.date);
+      if (dateErr) {
+        alert(dateErr);
+        return;
+      }
+      const timeErr = validateOperationalTime(formData.time);
+      if (timeErr) {
+        alert(timeErr);
+        return;
+      }
+      setStep(3);
+    }
+  };
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
 
   const handleSelect = (field, value) => {
