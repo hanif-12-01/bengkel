@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Home, CalendarPlus, Clock, Settings, Car } from 'lucide-react';
+import { Home, CalendarPlus, Clock, Settings, Car, LogOut } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { getInitials, getProfile } from '../../lib/storage';
+import { getInitials } from '../../lib/storage';
+import { useAuth } from '../../context/AuthContext';
 
 const NAV_ITEMS = [
   { name: 'Home', path: '/dashboard', icon: Home },
@@ -34,8 +35,28 @@ function SidebarLink({ item }) {
 
 export default function Layout() {
   const navigate = useNavigate();
-  const [profile] = useState(getProfile);
-  const initials = getInitials(profile.fullName);
+  const { user, loading, logout } = useAuth();
+  const fullName = user?.name || 'Pelanggan';
+  const initials = getInitials(fullName);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/login', { replace: true });
+    }
+  }, [loading, navigate, user]);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login', { replace: true });
+  };
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center bg-background text-muted-foreground">Memuat sesi...</div>;
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="flex h-screen bg-background">
@@ -53,13 +74,20 @@ export default function Layout() {
           ))}
         </nav>
 
-        <div className="p-6 border-t border-border/50">
+        <div className="p-6 border-t border-border/50 space-y-2">
           <button
             onClick={() => navigate('/dashboard/profile')}
             className="flex items-center space-x-3 px-4 py-3 w-full rounded-xl text-muted font-medium hover:bg-primary/10 hover:text-primary transition-colors"
           >
             <Settings className="w-5 h-5" />
             <span>Settings</span>
+          </button>
+          <button
+            onClick={handleLogout}
+            className="flex items-center space-x-3 px-4 py-3 w-full rounded-xl text-muted font-medium hover:bg-red-500/10 hover:text-red-500 transition-colors"
+          >
+            <LogOut className="w-5 h-5" />
+            <span>Keluar</span>
           </button>
         </div>
       </aside>
@@ -84,7 +112,7 @@ export default function Layout() {
               {initials}
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-bold text-text">{profile.fullName || 'Pelanggan'}</span>
+              <span className="text-sm font-bold text-text">{fullName}</span>
               <span className="text-xs text-muted font-medium text-left">Premium Member</span>
             </div>
           </button>
