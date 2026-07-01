@@ -3,31 +3,30 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/Card';
-import { getProfile, saveSession } from '../lib/storage';
+import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { login, loading } = useAuth();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
 
     if (!identifier.trim() || !password.trim()) {
       setError('Email/no. telepon dan password wajib diisi.');
       return;
     }
 
-    const profile = getProfile();
-    saveSession({
-      isLoggedIn: true,
-      identifier: identifier.trim(),
-      fullName: profile.fullName,
-      loginAt: new Date().toISOString(),
-    });
-
-    navigate('/dashboard');
+    try {
+      await login(identifier.trim(), password);
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err?.message || 'Login gagal. Pastikan backend Laravel dan database aktif.');
+    }
   };
 
   return (
@@ -60,8 +59,8 @@ export default function LoginPage() {
                 <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Masukkan password" required />
               </div>
 
-              <Button type="submit" className="w-full mt-6" size="lg">
-                Masuk
+              <Button type="submit" className="w-full mt-6" size="lg" disabled={loading}>
+                {loading ? 'Memproses...' : 'Masuk'}
               </Button>
             </form>
 
