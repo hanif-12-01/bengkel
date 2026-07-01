@@ -37,7 +37,7 @@ export interface VehicleData {
 export async function createVehicle(
   payload: VehiclePayload
 ): Promise<VehicleData> {
-  return apiFetch<VehicleData>("/vehicles", {
+  return apiFetch<VehicleData>("/customer/vehicles", {
     method: "POST",
     body: JSON.stringify(payload),
   });
@@ -67,6 +67,14 @@ export interface BookingServiceData {
   created_at: string;
 }
 
+export interface BookingSlot {
+  time: string;
+  capacity: number;
+  booked: number;
+  available: number;
+  is_available: boolean;
+}
+
 export interface BookingData {
   id: string;
   customer_name: string;
@@ -80,6 +88,8 @@ export interface BookingData {
   estimated_min_price: string;
   estimated_max_price: string;
   status: BookingStatus;
+  mechanic_id: number | null;
+  mechanic_name: string | null;
   created_at: string;
   updated_at: string;
   // Joined fields from vehicles table
@@ -99,26 +109,43 @@ export interface BookingData {
 export async function createBooking(
   payload: BookingPayload
 ): Promise<BookingData> {
-  return apiFetch<BookingData>("/bookings", {
+  return apiFetch<BookingData>("/customer/bookings", {
     method: "POST",
     body: JSON.stringify(payload),
   });
 }
 
 export async function fetchBookings(): Promise<BookingData[]> {
-  return apiFetch<BookingData[]>("/bookings");
+  return apiFetch<BookingData[]>("/customer/bookings");
 }
 
 export async function fetchBookingById(id: string): Promise<BookingData> {
-  return apiFetch<BookingData>(`/bookings/${id}`);
+  return apiFetch<BookingData>(`/customer/bookings/${id}`);
 }
 
 export async function updateBookingStatus(
   id: string,
   status: BookingStatus
 ): Promise<BookingData> {
-  return apiFetch<BookingData>(`/bookings/${id}/status`, {
+  return apiFetch<BookingData>(`/admin/bookings/${id}/status`, {
     method: "PATCH",
     body: JSON.stringify({ status }),
   });
+}
+
+export async function assignMechanic(
+  id: string,
+  mechanicId: number | null
+): Promise<BookingData> {
+  return apiFetch<BookingData>(`/admin/bookings/${id}/assign-mechanic`, {
+    method: "PATCH",
+    body: JSON.stringify({ mechanic_id: mechanicId }),
+  });
+}
+
+export async function fetchBookingSlots(
+  workshopId: number,
+  date: string
+): Promise<BookingSlot[]> {
+  return apiFetch<BookingSlot[]>(`/booking-slots?workshop_id=${workshopId}&date=${date}`);
 }
