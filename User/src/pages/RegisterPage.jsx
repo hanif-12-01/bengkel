@@ -3,10 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/Card';
-import { saveProfile, saveSession } from '../lib/storage';
+import { useAuth } from '../context/AuthContext';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const { register, loading } = useAuth();
   const [form, setForm] = useState({
     fullName: '',
     phone: '',
@@ -21,8 +22,9 @@ export default function RegisterPage() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
+    setError('');
 
     if (!form.fullName.trim() || !form.phone.trim() || !form.email.trim() || !form.password.trim() || !form.confirmPassword.trim()) {
       setError('Semua kolom wajib diisi.');
@@ -44,22 +46,18 @@ export default function RegisterPage() {
       return;
     }
 
-    const profile = {
-      fullName: form.fullName.trim(),
-      phone: form.phone.trim(),
-      email: form.email.trim(),
-      address: '',
-    };
-
-    saveProfile(profile);
-    saveSession({
-      isLoggedIn: true,
-      identifier: profile.email,
-      fullName: profile.fullName,
-      loginAt: new Date().toISOString(),
-    });
-
-    navigate('/dashboard');
+    try {
+      await register({
+        name: form.fullName.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim(),
+        password: form.password,
+        password_confirmation: form.confirmPassword,
+      });
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err?.message || 'Registrasi gagal. Pastikan backend Laravel dan database aktif.');
+    }
   };
 
   return (
@@ -111,8 +109,8 @@ export default function RegisterPage() {
                 </label>
               </div>
 
-              <Button type="submit" className="w-full mt-6" size="lg">
-                Daftar
+              <Button type="submit" className="w-full mt-6" size="lg" disabled={loading}>
+                {loading ? 'Memproses...' : 'Daftar'}
               </Button>
             </form>
 
