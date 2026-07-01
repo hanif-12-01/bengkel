@@ -22,11 +22,12 @@ class StoreVehicleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'vehicle_type' => ['required', 'string', 'in:car,motorcycle'],
+            'vehicle_type' => ['required', 'string', 'in:mobil,motor'],
             'brand' => ['required', 'string', 'max:255'],
             'model' => ['required', 'string', 'max:255'],
             'year' => ['required', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
             'plate_number' => ['required', 'string', 'max:50'],
+            'color' => ['nullable', 'string', 'max:100'],
             'current_mileage' => ['required', 'integer', 'min:0'],
         ];
     }
