@@ -3,8 +3,8 @@ import { apiFetch } from "./apiClient";
 export interface User {
   id: number;
   name: string;
-  email: string;
-  phone: string;
+  email: string | null;
+  phone: string | null;
   role: "customer" | "admin" | "mechanic";
   created_at: string;
   updated_at: string;
@@ -16,11 +16,12 @@ export interface LoginResponse {
 }
 
 export interface RegisterResponse {
+  token: string;
   user: User;
 }
 
 export const authApi = {
-  login: async (credentials: { email: string; password?: string }): Promise<LoginResponse> => {
+  login: async (credentials: { identifier: string; password: string }): Promise<LoginResponse> => {
     return apiFetch<LoginResponse>("/auth/login", {
       method: "POST",
       body: JSON.stringify(credentials),
@@ -29,9 +30,10 @@ export const authApi = {
 
   register: async (data: {
     name: string;
-    email: string;
-    phone: string;
-    password?: string;
+    email?: string;
+    phone?: string;
+    password: string;
+    password_confirmation: string;
   }): Promise<RegisterResponse> => {
     return apiFetch<RegisterResponse>("/auth/register", {
       method: "POST",
@@ -40,11 +42,12 @@ export const authApi = {
   },
 
   me: async (): Promise<User> => {
-    return apiFetch<User>("/auth/me");
+    const response = await apiFetch<{ user: User }>("/auth/me");
+    return response.user;
   },
 
-  logout: async (): Promise<{ message: string }> => {
-    return apiFetch<{ message: string }>("/auth/logout", {
+  logout: async (): Promise<null> => {
+    return apiFetch<null>("/auth/logout", {
       method: "POST",
     });
   },
